@@ -26,13 +26,6 @@ public class GreedySnake {
         int h = sc.nextInt();
         String[][] field = new String[h][l + 2];
         Snake tail;
-        for (int i = 0; i < field.length; i ++) {
-            field[i][0] = "|";
-            field[i][field[0].length - 1] = "|";
-            for (int j = 1; j < field[0].length - 1; j ++) {
-                field[i][j] = "丶";
-            }
-        }
         int a = r.nextInt(field.length);
         int b = r.nextInt(field[0].length - 2) + 1;
         al.add(new Snake(a, b));
@@ -123,7 +116,7 @@ public class GreedySnake {
                 System.out.println("正在退出!");
                 System.out.println("正在退出!");
                 System.out.println("正在退出!");
-                System.out.println("正在退出!");
+                System.out.println("已退出!");
                 System.exit(0);
             }
             update(field, al, food);
