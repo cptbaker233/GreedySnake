@@ -147,8 +147,8 @@ public class GreedySnake {
             field[al.get(i).x][al.get(i).y] = "回";
         }
         field[al.get(al.size() - 1).x][al.get(al.size() - 1).y] = "口";
-        field[al.get(0).x][al.get(0).y] = "國";
-        System.out.println("手动贪吃蛇v1.0");
+        field[al.get(0).x][al.get(0).y] = "圞";
+        System.out.println("手动贪吃蛇v1.2");
         for (int i = 1; i <= field[0].length ; i ++) {
             System.out.print("燚");
         }
