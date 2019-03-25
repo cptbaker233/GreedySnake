@@ -56,7 +56,6 @@ public class GreedySnake {
                 if (eat(al, food, tail)) {
                     food = respawn(al, field);
                     update(field, al, food);
-                    option = sc.next();
                 }
                 break;
             case "s":
@@ -73,7 +72,6 @@ public class GreedySnake {
                 if (eat(al, food, tail)) {
                     food = respawn(al, field);
                     update(field, al, food);
-                    option = sc.next();
                 } 
                 break;
             case "a":
@@ -90,7 +88,6 @@ public class GreedySnake {
                 if (eat(al, food, tail)) {
                     food = respawn(al, field);
                     update(field, al, food);
-                    option = sc.next();
                 }
                 break;
             case "d":
@@ -107,7 +104,6 @@ public class GreedySnake {
                 if (eat(al, food, tail)) {
                     food = respawn(al, field);
                     update(field, al, food);
-                    option = sc.next();
                 }
                 break;
             case "quit":
@@ -122,8 +118,6 @@ public class GreedySnake {
             update(field, al, food);
             option = sc.next();
         }
-        
-        
     }
     
     //打印当前战场的方法
@@ -141,7 +135,7 @@ public class GreedySnake {
         }
         field[al.get(al.size() - 1).x][al.get(al.size() - 1).y] = "口";
         field[al.get(0).x][al.get(0).y] = "圞";
-        System.out.println("手动贪吃蛇v1.2");
+        System.out.println("手动贪吃蛇v1.3");
         for (int i = 1; i <= field[0].length ; i ++) {
             System.out.print("燚");
         }
