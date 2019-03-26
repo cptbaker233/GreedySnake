@@ -1,5 +1,11 @@
 package com.igeek.greedy_snake;
 
+/**
+ * 人力贪吃蛇,wasd控制移动,enter输入确定移动
+ * @author NFUE
+ * @date 2019.3.24
+ */
+
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
