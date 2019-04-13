@@ -1,7 +1,7 @@
 package com.igeek.greedy_snake;
 
 /**
- * 人力贪吃蛇,wasd控制移动,enter输入确定移动
+ * 人力贪吃蛇,wasd控制移动,enter输入确定移动,创建多线程
  * @author NFUE
  * @date 2019.3.24
  */
@@ -21,113 +21,67 @@ class Snake {
     }
 }
 
-public class GreedySnake {
+public class GreedySnake implements Runnable {
+    private static String direction;
+    private static ArrayList<Snake> al = new ArrayList<Snake>();
+    private static Snake food;
+    private static String[][] field;
+    private static Snake tail;
+    private static int speed = 600;
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         Random r = new Random();
-        ArrayList<Snake> al = new ArrayList<Snake>();
         System.out.println("请设置场地长:");
         int l = sc.nextInt();
         System.out.println("请设置场地高度:");
         int h = sc.nextInt();
-        String[][] field = new String[h][l + 2];            //根据设置的场地长宽建立二维数组场地
-        Snake tail;
+        System.out.println("请设置移动速度:                 (默认600,数字越小越快)");
+        speed = sc.nextInt();
+        field = new String[h][l + 2];            //根据设置的场地长宽建立二维数组场地
         int a = r.nextInt(field.length);
         int b = r.nextInt(field[0].length - 2) + 1;
         al.add(new Snake(a, b));                            //在场地上随机生成第一个蛇的坐标
-        Snake food = respawn(al, field);                    //在场地上随机生成一个食物坐标
-        update(field, al, food);                            //确定蛇和食物的坐标之后,刷新场地
-        update(field, al, food);                            //蛇坐标的场地显示为蛇,空白场地显示为空格,食物坐标显示为〇
-        update(field, al, food);
-        update(field, al, food);
-        update(field, al, food);
-        update(field, al, food);
-        update(field, al, food);
-        update(field, al, food);
-        update(field, al, food);
-        String option = sc.next();
+        respawn();                    //在场地上随机生成一个食物坐标
+        update();                            //确定蛇和食物的坐标之后,刷新场地
+        update();                            //蛇坐标的场地显示为蛇,空白场地显示为空格,食物坐标显示为〇
+        update();
+        update();
+        update();
+        update();
+        update();
+        update();
+        update();
+        new Thread(new GreedySnake()).start();
         while(true) {
-            switch (option) {                               //根据用户输入的字符串分别进行移动
-            case "w":
-                tail = moveUp(al);
-                if (suicide(al, field)) {                   //移动之后如果判定碰撞,则游戏失败
-                    System.out.println("您死了!游戏失败!");
-                    System.out.println("您死了!游戏失败!");
-                    System.out.println("您死了!游戏失败!");
-                    System.out.println("您死了!游戏失败!");
-                    System.out.println("您死了!游戏失败!");
-                    System.out.println("您死了!游戏失败!");
-                    System.exit(0);
-                }
-                if (eat(al, food, tail)) {                  //如果移动之后吃掉了食物,更新蛇的坐标
-                    food = respawn(al, field);              //生成新的食物坐标
-                    update(field, al, food);                //确定了蛇和食物的坐标之后,刷新场地
-                }
-                break;
-            case "s":
-                tail = moveDown(al);
-                if (suicide(al, field)) {
-                    System.out.println("您死了!游戏失败!");
-                    System.out.println("您死了!游戏失败!");
-                    System.out.println("您死了!游戏失败!");
-                    System.out.println("您死了!游戏失败!");
-                    System.out.println("您死了!游戏失败!");
-                    System.out.println("您死了!游戏失败!");
-                    System.exit(0);
-                }
-                if (eat(al, food, tail)) {
-                    food = respawn(al, field);
-                    update(field, al, food);
-                } 
-                break;
-            case "a":
-                tail = moveLeft(al);
-                if (suicide(al, field)) {
-                    System.out.println("您死了!游戏失败!");
-                    System.out.println("您死了!游戏失败!");
-                    System.out.println("您死了!游戏失败!");
-                    System.out.println("您死了!游戏失败!");
-                    System.out.println("您死了!游戏失败!");
-                    System.out.println("您死了!游戏失败!");
-                    System.exit(0);
-                }
-                if (eat(al, food, tail)) {
-                    food = respawn(al, field);
-                    update(field, al, food);
-                }
-                break;
-            case "d":
-                tail = moveRight(al);
-                if (suicide(al, field)) {
-                    System.out.println("您死了!游戏失败!");
-                    System.out.println("您死了!游戏失败!");
-                    System.out.println("您死了!游戏失败!");
-                    System.out.println("您死了!游戏失败!");
-                    System.out.println("您死了!游戏失败!");
-                    System.out.println("您死了!游戏失败!");
-                    System.exit(0);
-                }
-                if (eat(al, food, tail)) {
-                    food = respawn(al, field);
-                    update(field, al, food);
-                }
-                break;
-            case "quit":
-                System.out.println("正在退出!");
-                System.out.println("正在退出!");
-                System.out.println("正在退出!");
-                System.out.println("正在退出!");
-                System.out.println("正在退出!");
-                System.out.println("已退出!");
+            String newDir = sc.next();
+            if (newDir.equals("quit")) {
+                System.out.println("退出游戏!!!!!!!!!!!!");
+                System.out.println("退出游戏!!!!!!!!!!!!");
+                System.out.println("退出游戏!!!!!!!!!!!!");
+                System.out.println("退出游戏!!!!!!!!!!!!");
                 System.exit(0);
+            } else if (direction == null) {
+                direction = newDir;
+                tail = move();
+                if (suicide()) {
+                    System.out.println("您死了!游戏失败!");
+                    System.out.println("您死了!游戏失败!");
+                    System.out.println("您死了!游戏失败!");
+                    System.out.println("您死了!游戏失败!");
+                    System.out.println("您死了!游戏失败!");
+                    System.out.println("您死了!游戏失败!");
+                    System.exit(0);
+                }
+                update();
+                eat();
+            } else if (!newDir.equals(oppositeDir())) {
+                direction = newDir;
             }
-            update(field, al, food);                //如果没有吃掉食物,跳出switch之后刷新场地(食物无需生成,蛇坐标已更新)
-            option = sc.next();
         }
     }
     
     //打印当前战场的方法
-    public static void update(String[][] field, ArrayList<Snake> al, Snake food) {
+    public static void update() {
         for (int i = 0; i < field.length; i ++) {                       //先把整个场地清理为初始场地
             field[i][0] = "燚";
             field[i][field[0].length - 1] = "燚";
@@ -141,7 +95,7 @@ public class GreedySnake {
         }
         field[al.get(al.size() - 1).x][al.get(al.size() - 1).y] = "口";  //便于区分,将蛇头和蛇尾特殊标记
         field[al.get(0).x][al.get(0).y] = "圞";
-        System.out.println("手动贪吃蛇v1.3");
+        System.out.println("半自动贪吃蛇v1.3");
         /*
          * 所有的坐标都确定之后,将场地刷新出蛇和食物
          */
@@ -163,19 +117,23 @@ public class GreedySnake {
     }
     
     //食物碰撞检查
-    public static boolean hit(Snake s, ArrayList<Snake> al) {
-        for (int i = 0; i < al.size(); i ++) {
-            if (s.x == al.get(i).x && s.y == al.get(i).y) {         //生成了食物之后如果食物与蛇坐标重合,判定碰撞
-                return true;
+    public static boolean hit() {
+        if (food != null) {
+            for (int i = 0; i < al.size(); i ++) {
+                if (food.x == al.get(i).x && food.y == al.get(i).y) {         //生成了食物之后如果食物与蛇坐标重合,判定碰撞
+                    return true;
+                }
             }
+            return false;
+        } else {
+            return false;
         }
-        return false;
     }
     //生成食物的方法
-    public static Snake respawn(ArrayList<Snake> al, String[][] field) {
+    public static void respawn() {
         Random r = new Random();
-        Snake s = new Snake(r.nextInt(field.length), r.nextInt(field[0].length - 2) + 1);   //随机生成食物
-        while (hit(s,al)) {                                                                 //一直生成新食物直到生成不与蛇碰撞的食物
+        food = new Snake(r.nextInt(field.length), r.nextInt(field[0].length - 2) + 1);   //随机生成食物
+        while (hit()) {                                                                 //一直生成新食物直到生成不与蛇碰撞的食物
             if (al.size() == field.length * (field[0].length - 2)) {                        //如果蛇已经把场地填充满,则判断通关
                 System.out.println("恭喜您通关!");
                 System.out.println("恭喜您通关!");
@@ -185,70 +143,88 @@ public class GreedySnake {
                 System.out.println("恭喜您通关!");
                 System.exit(0);
             }
-            s = new Snake(r.nextInt(field.length), r.nextInt(field[0].length - 2) + 1);
+            food = new Snake(r.nextInt(field.length), r.nextInt(field[0].length - 2) + 1);
         }
-        return s;
     }
     //判断吃掉的条件
-    public static boolean eat(ArrayList<Snake> al, Snake food, Snake tail) {
-        int x = al.get(0).x;
-        int y = al.get(0).y;        
-        if (x == food.x && y == food.y) {   //移动之后,如果蛇头坐标与食物相同,判定true
+    public static boolean eat() {
+        if (al.get(0).x == food.x && al.get(0).y == food.y) {   //移动之后,如果蛇头坐标与食物相同,判定true
             al.add(tail);                   //将上一次移动的蛇尾对象加在蛇尾
+            respawn();
+            update(); 
             return true;
         }
         return false;
     }
-    //右移
-    public static Snake moveRight(ArrayList<Snake> al) {
-        Snake tail = new Snake(al.get(al.size() - 1).x, al.get(al.size() - 1).y);        
-        if (al.size() == 1) {               //蛇长度只有1时,直接移动
-            al.get(0).y ++;
-        } else if (al.get(0).y + 1 != al.get(1).y) {            //蛇长度大于1时,只要不是回头就允许移动,并返回本次的蛇尾巴以便判断吃掉食物
-            Snake head = new Snake(al.get(0).x, al.get(0).y + 1);
-            al.remove(al.get(al.size() - 1));
-            al.add(0, head);
+    
+    //得到相反方向的方法
+    public static String oppositeDir() {
+        switch (direction) {
+        case "w":
+            return "s";
+        case "s" :
+            return "w";
+        case "a" : 
+            return "d";
+        case "d" : 
+            return "a";
+        default:
+            return direction;
         }
-        return tail;
     }
-  //左移
-    public static Snake moveLeft(ArrayList<Snake> al) {
-        Snake tail = new Snake(al.get(al.size() - 1).x, al.get(al.size() - 1).y);      
-        if (al.size() == 1) {
-            al.get(0).y --;
-        } else if (al.get(0).y - 1 != al.get(1).y) {
-            Snake head = new Snake(al.get(0).x, al.get(0).y - 1);
-            al.remove(al.get(al.size() - 1));
-            al.add(0, head);
+    //移动的方法
+    public static Snake move() {
+        switch (direction) {
+        case "d":
+            tail = new Snake(al.get(al.size() - 1).x, al.get(al.size() - 1).y);        
+            if (al.size() == 1) {               //蛇长度只有1时,直接移动
+                al.get(0).y ++;
+            } else {            
+                Snake head = new Snake(al.get(0).x, al.get(0).y + 1);
+                al.remove(al.get(al.size() - 1));
+                al.add(0, head);
+            }
+            return tail;
+            
+        case "a":
+            tail = new Snake(al.get(al.size() - 1).x, al.get(al.size() - 1).y);      
+            if (al.size() == 1) {
+                al.get(0).y --;
+            } else {
+                Snake head = new Snake(al.get(0).x, al.get(0).y - 1);
+                al.remove(al.get(al.size() - 1));
+                al.add(0, head);
+            }
+            return tail;
+            
+        case "w":
+            tail = new Snake(al.get(al.size() - 1).x, al.get(al.size() - 1).y);       
+            if (al.size() == 1) {
+                al.get(0).x --;
+            } else {
+                Snake head = new Snake(al.get(0).x - 1, al.get(0).y);
+                al.remove(al.get(al.size() - 1));
+                al.add(0, head);
+            }
+            return tail;
+            
+        case "s":
+            tail = new Snake(al.get(al.size() - 1).x, al.get(al.size() - 1).y);     
+            if (al.size() == 1) {
+                al.get(0).x ++;
+            } else {
+                Snake head = new Snake(al.get(0).x + 1, al.get(0).y);
+                al.remove(al.get(al.size() - 1));
+                al.add(0, head);
+            }
+            return tail;
+            
+        default:
+            return tail;
         }
-        return tail;
-    }
-  //上移
-    public static Snake moveUp(ArrayList<Snake> al) {
-        Snake tail = new Snake(al.get(al.size() - 1).x, al.get(al.size() - 1).y);       
-        if (al.size() == 1) {
-            al.get(0).x --;
-        } else if (al.get(0).x - 1!= al.get(1).x) {
-            Snake head = new Snake(al.get(0).x - 1, al.get(0).y);
-            al.remove(al.get(al.size() - 1));
-            al.add(0, head);
-        }
-        return tail;
-    }
-  //下移
-    public static Snake moveDown(ArrayList<Snake> al) {
-        Snake tail = new Snake(al.get(al.size() - 1).x, al.get(al.size() - 1).y);     
-        if (al.size() == 1) {
-            al.get(0).x ++;
-        } else if (al.get(0).x + 1 != al.get(1).x) {
-            Snake head = new Snake(al.get(0).x + 1, al.get(0).y);
-            al.remove(al.get(al.size() - 1));
-            al.add(0, head);
-        }
-        return tail;
     }
   //蛇自体碰撞检查和边界碰撞检查
-    public static boolean suicide(ArrayList<Snake> al, String[][] field) {
+    public static boolean suicide() {
         if (al.get(0).x == -1 || al.get(0).x == field.length || al.get(0).y == field[0].length - 1 || al.get(0).y == 0 ) {    //如果蛇头与蛇自身或者边界重合,判定true
             return true;
         }
@@ -258,5 +234,38 @@ public class GreedySnake {
             }
         }
         return false;
+    }
+
+    //重写run方法实现多线程蛇自动前进
+    @Override 
+    public void run() {
+        if(direction != null) {
+            while (true) {
+                tail = move();  
+                if (suicide()) {
+                    System.out.println("您死了!游戏失败!");
+                    System.out.println("您死了!游戏失败!");
+                    System.out.println("您死了!游戏失败!");
+                    System.out.println("您死了!游戏失败!");
+                    System.out.println("您死了!游戏失败!");
+                    System.out.println("您死了!游戏失败!");
+                    System.exit(0);
+                }
+                update();
+                eat();
+                try {
+                    Thread.sleep(speed);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            try {
+                Thread.sleep(10);       //游戏开始的时候没有初始方向,则延时死循环等待用户输入方向
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            run();
+        }
     }
 }
