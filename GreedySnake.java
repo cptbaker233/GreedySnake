@@ -1,14 +1,17 @@
 package com.igeek.greedy_snake;
 
-/**
- * 人力贪吃蛇,wasd控制移动,enter输入确定移动,创建多线程
- * @author NFUE
- * @date 2019.3.24
- */
-
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
+/**
+ * 
+* @typename Snake  
+* @author NFUE  
+* @Description: 加入多线程的半自动贪吃蛇小游戏
+* @date 2019年4月13日 下午3:40:48    
+* @Company https://github.com/cptbaker233
+*
+ */
 
 class Snake {
     int x;
