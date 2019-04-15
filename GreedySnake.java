@@ -46,14 +46,6 @@ public class GreedySnake implements Runnable {
         al.add(new Snake(a, b));                            //在场地上随机生成第一个蛇的坐标
         respawn();                    //在场地上随机生成一个食物坐标
         update();                            //确定蛇和食物的坐标之后,刷新场地
-        update();                            //蛇坐标的场地显示为蛇,空白场地显示为空格,食物坐标显示为〇
-        update();
-        update();
-        update();
-        update();
-        update();
-        update();
-        update();
         new Thread(new GreedySnake()).start();
         while(true) {
             String newDir = sc.next();
@@ -63,28 +55,43 @@ public class GreedySnake implements Runnable {
                 System.out.println("退出游戏!!!!!!!!!!!!");
                 System.out.println("退出游戏!!!!!!!!!!!!");
                 System.exit(0);
-            } else if (direction == null) {
-                direction = newDir;
-                tail = move();
-                if (suicide()) {
-                    System.out.println("您死了!游戏失败!");
-                    System.out.println("您死了!游戏失败!");
-                    System.out.println("您死了!游戏失败!");
-                    System.out.println("您死了!游戏失败!");
-                    System.out.println("您死了!游戏失败!");
-                    System.out.println("您死了!游戏失败!");
-                    System.exit(0);
+            } else if (newDir.equals("w") || newDir.equals("a") || newDir.equals("s") || newDir.equals("d")) {
+                if (direction == null) {
+                    direction = newDir;
+                    tail = move();
+                    if (suicide()) {
+                        System.out.println("您死了!游戏失败!");
+                        System.out.println("您死了!游戏失败!");
+                        System.out.println("您死了!游戏失败!");
+                        System.out.println("您死了!游戏失败!");
+                        System.out.println("您死了!游戏失败!");
+                        System.out.println("您死了!游戏失败!");
+                        System.exit(0);
+                    }
+                    eat();
+                    update();
+                } else if (!newDir.equals(oppositeDir())) {
+                    direction = newDir;
+                    tail = move();
+                    if (suicide()) {
+                        System.out.println("您死了!游戏失败!");
+                        System.out.println("您死了!游戏失败!");
+                        System.out.println("您死了!游戏失败!");
+                        System.out.println("您死了!游戏失败!");
+                        System.out.println("您死了!游戏失败!");
+                        System.out.println("您死了!游戏失败!");
+                        System.exit(0);
+                    }
+                    eat();
+                    update();
                 }
-                update();
-                eat();
-            } else if (!newDir.equals(oppositeDir())) {
-                direction = newDir;
             }
         }
     }
     
     //打印当前战场的方法
-    public static void update() {
+    public static synchronized void update() {
+        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
         for (int i = 0; i < field.length; i ++) {                       //先把整个场地清理为初始场地
             field[i][0] = "燚";
             field[i][field[0].length - 1] = "燚";
@@ -99,6 +106,7 @@ public class GreedySnake implements Runnable {
         field[al.get(al.size() - 1).x][al.get(al.size() - 1).y] = "口";  //便于区分,将蛇头和蛇尾特殊标记
         field[al.get(0).x][al.get(0).y] = "圞";
         System.out.println("半自动贪吃蛇v1.3");
+        System.out.println("当前方向: " + direction);
         /*
          * 所有的坐标都确定之后,将场地刷新出蛇和食物
          */
@@ -150,7 +158,7 @@ public class GreedySnake implements Runnable {
         }
     }
     //判断吃掉的条件
-    public static boolean eat() {
+    public static synchronized boolean eat() {
         if (al.get(0).x == food.x && al.get(0).y == food.y) {   //移动之后,如果蛇头坐标与食物相同,判定true
             al.add(tail);                   //将上一次移动的蛇尾对象加在蛇尾
             respawn();
@@ -254,8 +262,8 @@ public class GreedySnake implements Runnable {
                     System.out.println("您死了!游戏失败!");
                     System.exit(0);
                 }
-                update();
                 eat();
+                update();
                 try {
                     Thread.sleep(speed);
                 } catch (InterruptedException e) {
@@ -264,7 +272,7 @@ public class GreedySnake implements Runnable {
             }
         } else {
             try {
-                Thread.sleep(10);       //游戏开始的时候没有初始方向,则延时死循环等待用户输入方向
+                Thread.sleep(100);       //游戏开始的时候没有初始方向,则延时死循环等待用户输入方向
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
