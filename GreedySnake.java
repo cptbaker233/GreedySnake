@@ -1,4 +1,4 @@
-package com.igeek.greedy_snake;
+package com.igeek.demo;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -58,32 +58,9 @@ public class GreedySnake implements Runnable {
             } else if (newDir.equals("w") || newDir.equals("a") || newDir.equals("s") || newDir.equals("d")) {
                 if (direction == null) {
                     direction = newDir;
-                    tail = move();
-                    if (suicide()) {
-                        System.out.println("ÄúËÀÁË!ÓÎÏ·Ê§°Ü!");
-                        System.out.println("ÄúËÀÁË!ÓÎÏ·Ê§°Ü!");
-                        System.out.println("ÄúËÀÁË!ÓÎÏ·Ê§°Ü!");
-                        System.out.println("ÄúËÀÁË!ÓÎÏ·Ê§°Ü!");
-                        System.out.println("ÄúËÀÁË!ÓÎÏ·Ê§°Ü!");
-                        System.out.println("ÄúËÀÁË!ÓÎÏ·Ê§°Ü!");
-                        System.exit(0);
-                    }
-                    eat();
-                    update();
+                    
                 } else if (!newDir.equals(oppositeDir())) {
                     direction = newDir;
-                    tail = move();
-                    if (suicide()) {
-                        System.out.println("ÄúËÀÁË!ÓÎÏ·Ê§°Ü!");
-                        System.out.println("ÄúËÀÁË!ÓÎÏ·Ê§°Ü!");
-                        System.out.println("ÄúËÀÁË!ÓÎÏ·Ê§°Ü!");
-                        System.out.println("ÄúËÀÁË!ÓÎÏ·Ê§°Ü!");
-                        System.out.println("ÄúËÀÁË!ÓÎÏ·Ê§°Ü!");
-                        System.out.println("ÄúËÀÁË!ÓÎÏ·Ê§°Ü!");
-                        System.exit(0);
-                    }
-                    eat();
-                    update();
                 }
             }
         }
